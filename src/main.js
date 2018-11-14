@@ -1,8 +1,35 @@
 import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
 import App from './App.vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.config.productionTip = false
+import { routes } from './routes'
+import { store } from './store/store'
+
+Vue.config.productionTip = false;
+Vue.use(BootstrapVue);
+Vue.use(VueRouter);
+Vue.use(VueResource);
+Vue.http.options.root = 'http://localhost:5000/api';
+
+Vue.http.interceptors.push((request, next) => {
+  if (request.method === 'POST' && request.url !== 'login' && request.url !== 'register') {
+    const token = localStorage.getItem('token');
+    request.headers.set('Authorization', `Bearer ${token}`);
+    next();
+  }
+});
+
+const router = new VueRouter({
+  routes: routes,
+  mode: 'history'
+});
 
 new Vue({
-  render: h => h(App),
+  router: router,
+  store: store,
+  render: h => h(App)
 }).$mount('#app')

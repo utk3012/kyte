@@ -2,7 +2,7 @@
     <b-container style="margin-top: 24vh;">
 		<div class="row text-center">
 			<div class="col-sm-12">
-				<h2>Social Media - Login</h2>
+				<h2>Kyte - Login</h2>
 				<br>
 			</div>
 		</div>

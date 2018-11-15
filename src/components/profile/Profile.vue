@@ -39,24 +39,30 @@ export default {
         };
     },
     methods: {
+        async getPosts() {
+            this.username = this.$route.params.username;
+            try {
+                const res = await this.$http.post('post/getposts', { username: this.username });
+                if (res.status === 200) {
+                    this.posts = [...res.body.posts];
+                }
+            }
+            catch (error) {
+                if (error.status === 404 && error.body.msg === 'user not found') {
+                    this.$router.push('not-found');
+                }
+                console.log(error);
+            }
+        }
     },
     watch: {
         '$route'(to, from) {
             this.username = to.params.username;
-            this.created();
+            this.getPosts();
         },
     },
-    async created() {
-        this.username = this.$route.params.username;
-        try {
-            const res = await this.$http.post('post/getposts', { username: this.username });
-            if (res.status === 200) {
-                this.posts = [...res.body.posts];
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
+    created() {
+        this.getPosts();
     },
     computed: {
         showPosts() {

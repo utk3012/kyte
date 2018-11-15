@@ -2,7 +2,7 @@
     <div class="container" style="margin-top: 12vh;">
 		<div class="row text-center">
 			<div class="col-sm-12">
-				<h2>Social Media - Register</h2>
+				<h2>Kyte - Register</h2>
 				<br>
 			</div>
 		</div>
@@ -171,8 +171,3 @@ export default {
     },
 }
 </script>
-
-<style>
-</style>
-
-

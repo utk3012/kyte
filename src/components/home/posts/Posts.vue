@@ -16,7 +16,7 @@
                         <div class="row justify-content-end">
                             <span v-if="post.public == 1" style="margin-right: 10px;"><i class="fas fa-globe"></i></span>
                             
-                            <span style="color: red;cursor: pointer;"><i class="fas fa-trash"></i></span>
+                            <span v-if="post.p_id === user.id" @click="onDelete(post.p_id, i)" style="color: red;cursor: pointer;"><i class="fas fa-trash"></i></span>
                             &emsp;
                         </div>
                     </div>
@@ -44,7 +44,7 @@ export default {
     methods: {
         async onLike(postId, ind) {
             try {
-                const res = await this.$http.post('post/likepost', {postId: postId});
+                const res = await this.$http.post('post/like', { postId: postId });
                 if (res.status === 200) {
                     const index = this.posts[ind].likes.indexOf(this.user.id);
                     if (index === -1) {
@@ -53,6 +53,17 @@ export default {
                     else {
                         this.posts[ind].likes.splice(index, 1);
                     }
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async onDelete(postId, ind) {
+            try {
+                const res = await this.$http.post('post/delete', { postId: postId });
+                if (res.status === 200) {
+                    this.posts.splice(ind, 1);
                 }
             }
             catch (error) {

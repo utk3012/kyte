@@ -8,6 +8,7 @@
   <b-collapse is-nav id="nav_collapse">
       <div class="d-md-none">
         <b-navbar-nav>
+            <b-nav-item to="/home" title="Home">Home</b-nav-item>
             <b-nav-item to="/notifications" title="Notifications">Notifications</b-nav-item>
             <b-nav-item to="/friends" title="Friends">Friends</b-nav-item>
             <b-nav-item to="/message" title="Messages">Messenger</b-nav-item>
@@ -17,6 +18,7 @@
     </div>
     <div class="d-none d-md-block">
         <b-navbar-nav>
+            <b-nav-item to="/home" title="Home">&nbsp;&nbsp;<i class="fas fa-home"></i> </b-nav-item>
             <b-nav-item to="/notifications" title="Notifications">&nbsp;&nbsp;<i class="fas fa-bell"></i> </b-nav-item>
             <b-nav-item to="/friends" title="Friends">&nbsp;&nbsp;<i class="fas fa-user-friends"></i> </b-nav-item>
             <b-nav-item to="/message" title="Messages">&nbsp;&nbsp;<i class="fas fa-envelope"></i></b-nav-item>
@@ -27,7 +29,7 @@
     <b-navbar-nav class="ml-auto">
       <b-nav-item-dropdown right>
         <template slot="button-content">
-          {{ user.name }}
+          {{ user.name ? user.name.split(' ')[0] : '' }}
         </template>
         <b-dropdown-item :to="`${user.username}`">Profile</b-dropdown-item>
         <b-dropdown-item @click="onLogout">Logout</b-dropdown-item>

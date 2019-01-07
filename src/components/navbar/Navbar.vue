@@ -18,9 +18,9 @@
     </div>
     <div class="d-none d-md-block">
         <b-navbar-nav>
-            <b-nav-item to="/home" title="Home">&nbsp;&nbsp;<i class="fas fa-home"></i> </b-nav-item>
-            <b-nav-item to="/notifications" title="Notifications">&nbsp;&nbsp;<i class="fas fa-bell"></i> </b-nav-item>
-            <b-nav-item to="/friends" title="Friends">&nbsp;&nbsp;<i class="fas fa-user-friends"></i> </b-nav-item>
+            <b-nav-item to="/home" title="Home">&nbsp;&nbsp;<i class="fas fa-home"></i></b-nav-item>
+            <b-nav-item to="/notifications" title="Notifications">&nbsp;&nbsp;<i class="fas fa-bell"></i></b-nav-item>
+            <b-nav-item to="/friends" title="Friends">&nbsp;&nbsp;<i class="fas fa-user-friends"></i></b-nav-item>
             <b-nav-item to="/message" title="Messages">&nbsp;&nbsp;<i class="fas fa-envelope"></i></b-nav-item>
             <b-nav-item to="/requests" title="Friend Requests">&nbsp;&nbsp;<i class="fas fa-user-plus"></i></b-nav-item>
             <b-nav-item to="/discover" title="Discover People">&nbsp;&nbsp;<i class="fas fa-globe-asia"></i></b-nav-item>

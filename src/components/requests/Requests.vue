@@ -1,83 +1,88 @@
 <template>
     <div>
         <app-navbar></app-navbar>
-        <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px" v-if="showData">
-        <div class="w3-row">
-            <div class="w3-col m2" style="color: white;">*</div>
-            <div class="w3-col m8">
+        <div class="container">
+            <br>
+        <div class="row justify-content-center">
+            <div class="col-sm-10 col-md-10 col-lg-8">
             <h3>Friend Requests</h3>
             <h4 v-if="users.length === 0">No requests</h4>
-            <ul class="w3-ul w3-card-4">
-                <li class="w3-bar" @click="viewUser(user.username)" v-for="user in users" :key="user.username">
-                <div class="w3-right">
-                    <button class="w3-button w3-block w3-green w3-section" title="Accept" @click="acceptRequest(user.username)"><i class="fa fa-check"></i></button>
+            <span v-else>
+                <div @click="viewUser(user.username)" v-for="user in users" :key="user.username">
+                <div class="card" style="margin-bottom: 10px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2 col-sm-2 col-xl-1">
+                        <img :src="user.image" alt="profile-img" class="rounded-circle" width="50px"
+                            height="50px" style="cursor: pointer">
+                    </div>
+                    <div class="col-8 col-sm-7 col-xl-8">
+                        <h5 class="card-title">&nbsp; <router-link :to="user.username" class="user__route">{{ user.name }}</router-link></h5>
+                        <h6 class="card-subtitle mb-2 text-muted" style="text-transform: capitalize;">&nbsp; {{ user.gender }}</h6>
+                    </div>
+                    <div class="col-2 col-sm-3 col-xl-3">
+                        <b-button :size="'sm'" :variant="'success'" @click="acceptRequest(user.relId, user.username)">
+                            Accept
+                        </b-button>&nbsp;
+                        <b-button :size="'sm'" :variant="'danger'" @click="rejectRequest(user.relId)">
+                            Reject
+                        </b-button>
+                    </div>
                 </div>
-                <div class="w3-right">
-                    <button class="w3-button w3-block w3-red w3-section" title="Decline"><i class="fa fa-remove"></i></button>
+            </div>
                 </div>
-                <img :src="user.image" class="w3-bar-item w3-circle" style="width:85px">
-                <div class="w3-bar-item">
-                    <span class="w3-large">{{ user.name }}</span><br>
-                    <span>{{ user.info }}</span>
                 </div>
-                </li>
-            </ul>
+            </span>
             </div>
         </div>
         </div>
     </div>
 </template>
 <script>
-import Navbar from '../navbar/Navbar'
-
 export default {
-    components: {
-        'app-navbar': Navbar
-    },
     data: () => {
         return {
-            showData: false,
-            users: [],
-            username: ''
+            users: []
         };
     },
-    method: {
+    methods: {
         viewUser(username) {
             this.$router.push(`/${username}`);
         },
-        acceptRequest(fromUsername) {
-            const accessToken = localStorage.getItem('accessToken');
-            const header = {
-                Authorization: `Bearer ${accessToken}`
-            };
-            this.$http.post('accept_request', {forUsername: this.username, fromUsername: fromUsername}, {headers: header})
-                .then(response => {
-                    if(response.body.success === 1) {
-                        this.viewUser(fromUsername);
-                    }
-                }, error => {
-                    console.log(error);
-                });
+        async acceptRequest(relId, username) {
+            try {
+                const [resp] = await this.$http.post('user/acceptrequest', { relId: relId });
+                if (resp.status === 200) {
+                    console.log(resp);
+                    this.viewUser(username);
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async rejectRequest(relId) {
+            try {
+                const [resp] = await this.$http.post('user/rejectrequest', { relId: relId });
+                if (resp.status === 200) {
+                    this.$router.push('/home');
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     },
-    created() {
-        const accessToken = localStorage.getItem('accessToken');
-        this.username = localStorage.getItem('username');
-        const header = {
-            Authorization: `Bearer ${accessToken}`
-        };
-        this.$http.post('get_requests', {username: this.username}, {headers: header})
-            .then(response => {
-                if (response.body.success === 1) {
-                    this.users = [...response.body.data]
-                }
-                else {
-                    this.users = [];
-                }
-                this.showData = true;
-            }, error => {
-                console.log(error);
-            });
+    async created() {
+        try {
+            const res = await this.$http.post('user/getrequests');
+            if (res.status === 200) {
+                this.users = [...res.body.requests];
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 }
 </script>

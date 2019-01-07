@@ -5,11 +5,6 @@
     </div>
 </template>
 <script>
-import Navbar from '../navbar/Navbar'
-
 export default {
-    components: {
-        'app-navbar': Navbar
-    }
 }
 </script>

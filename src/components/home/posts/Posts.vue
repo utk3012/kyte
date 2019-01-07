@@ -16,19 +16,28 @@
                         <div class="row justify-content-end">
                             <span v-if="post.public == 1" style="margin-right: 10px;"><i class="fas fa-globe"></i></span>
                             
-                            <span v-if="post.p_id === user.id" @click="onDelete(post.p_id, i)" style="color: red;cursor: pointer;"><i class="fas fa-trash"></i></span>
+                            <span v-if="post.u_id === user.id" @click="onDelete(post.p_id, i)" style="color: red;cursor: pointer;"><i class="fas fa-trash"></i></span>
                             &emsp;
                         </div>
                     </div>
                 </div>
-                <p class="card-text">
-                    {{ post.post }}
-                </p>
-                <span style="cursor: pointer;" @click="onLike(post.p_id, i)">
-                    <i class="fas fa-thumbs-up" :class="{liked: liked(i)}"></i></span>
-                    <span> {{ post.likes.length }}</span>
-                &emsp;
-                <a href="#" class="card-link">Comments</a>
+                <b-row style="margin-top: 5px; margin-bottom: 9px;">
+                    <p class="card-text col-12">
+                        {{ post.post }}
+                    </p>
+                </b-row>
+                <b-row>
+                    <div class="col-10">
+                        <span style="cursor: pointer;" @click="onLike(post.p_id, i)">
+                            <i class="fas fa-thumbs-up" :class="{liked: liked(i)}"></i></span>
+                            <span> {{ post.likes.length }}</span>
+                        &emsp;
+                        <b-link href="#">Comments</b-link>
+                    </div>
+                    <div class="col-2">
+                        <b-link :to="`post/${post.p_id}`">View post</b-link>
+                    </div>
+                </b-row>
             </div>
         </div>
         <br>

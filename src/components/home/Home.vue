@@ -42,7 +42,6 @@
     </div>
 </template>
 <script>
-import Navbar from '../navbar/Navbar'
 import Posts from './posts/Posts'
 
 export default {
@@ -53,7 +52,6 @@ export default {
         };
     },
     components: {
-        'app-navbar': Navbar,
         'app-posts': Posts
     },
     computed: {
@@ -72,6 +70,11 @@ export default {
                 if (res.status === 200) {
                     this.post.post = '';
                     this.post.public = false;
+                    this.$toasted.show('Posted', { 
+                        theme: "primary", 
+                        position: "top-right", 
+                        duration : 2000
+                    });
                 }
             }
             catch (error) {

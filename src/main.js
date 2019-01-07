@@ -5,14 +5,18 @@ import VueResource from 'vue-resource'
 import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Toasted from 'vue-toasted'
 
 import { routes } from './routes'
 import { store } from './store/store'
+import Navbar from './components/navbar/Navbar'
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(VueResource);
+Vue.use(Toasted);
+Vue.component('app-navbar', Navbar);
 Vue.http.options.root = 'http://localhost:5000/api';
 
 Vue.http.interceptors.push((request, next) => {

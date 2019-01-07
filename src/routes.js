@@ -7,6 +7,7 @@ import Message from './components/message/Message';
 import Discover from './components/discover/Discover';
 import Requests from './components/requests/Requests';
 import Profile from './components/profile/Profile';
+import Post from './components/post/Post';
 import NotFound from './components/not-found/NotFound';
 
 export const routes = [
@@ -20,5 +21,6 @@ export const routes = [
     { path: '/discover', component: Discover },
     { path: '/requests', component: Requests },
     { path: '/not-found', component: NotFound },
-    { path: '/:username', component: Profile }
+    { path: '/:username', component: Profile },
+    { path: '/post/:id', component: Post }
 ];

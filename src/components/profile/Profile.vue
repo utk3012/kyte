@@ -57,14 +57,12 @@
     
 </template>
 <script>
-import Navbar from '../navbar/Navbar'
 import Posts from '../home/posts/Posts'
 import { mapGetters } from 'vuex'
 const moment = require('moment')
 
 export default {
     components: {
-        'app-navbar': Navbar,
         'app-posts': Posts
     },
     data: () => {

@@ -31,7 +31,7 @@
 							  <div class="input-group-prepend">
 									<div class="input-group-text">@</div>
 								  </div>
-                        
+								   
                         <b-form-input id="username"
                                     type="text"
                                     v-model="user.username"

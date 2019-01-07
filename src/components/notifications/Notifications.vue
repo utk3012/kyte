@@ -1,60 +1,64 @@
 <template>
     <div>
         <app-navbar></app-navbar>
-        <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
-        <div class="w3-row">
-            <div class="w3-col m2" style="color: white;">*</div>
-            <div class="w3-col m8">
-            <ul class="w3-ul w3-border">
-                <li><h2>Notifications</h2></li>
-                <span v-if="showMess">
-                <li><h4>No notifications</h4></li>
+        <div class="container">
+            <br>
+        <div class="row justify-content-center">
+			<div class="col-sm-10 col-md-10 col-lg-8">
+            
+                <h2>Notifications</h2>
+                <span v-if="notifications.length === 0">
+                <h4>No notifications</h4>
                 </span>
-                <span v-if="!showMess">
-                <li v-for="n in notifications" :key="n.time_stamp">
-                    <h4>{{ n.notification }}</h4>
-                </li>
+                <span v-else>
+                <div v-for="n in notifications" :key="n.createdAt" class="card" style="margin-bottom: 10px">
+                    <div class="card-body row">
+                        <div class="col-8">
+                            {{ n.notif }}
+                        </div>
+                        <div class="col-4">
+                            <div class="row justify-content-end text-muted">
+                                {{ getRelativeTime(n.createdAt) }}&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </span>
-            </ul>
+            
             </div>
         </div>
         </div>
     </div>
 </template>
 <script>
-import Navbar from '../navbar/Navbar'
+const moment = require('moment');
 
 export default {
-    components: {
-        'app-navbar': Navbar
-    },
     data: () => {
         return {
-            showMess: false,
             notifications: []
         };
     },
-    created() {
-        const accessToken = localStorage.getItem('accessToken');
-        const username = localStorage.getItem('username');
-        const header = {
-            Authorization: `Bearer ${accessToken}`
-        };
-        this.$http.post('get_notifications', {username: username}, {headers: header})
-            .then(response => {
-                if (response.body.success === 1) {
-                    this.notifications = response.body.data;
-                    this.notifications.sort(function compare(a, b) {
-                    const date1 = a.time_stamp != null ? new Date(a.time_stamp).getTime() : 0;
-                    const date2 = b.time_stamp != null ? new Date(b.time_stamp).getTime() : 0;
+    async created() {
+        try {
+            const res = await this.$http.post('user/getnotifications')
+            if (res.status === 200) {
+                this.notifications = res.body.notifications;
+                this.notifications.sort(function compare(a, b) {
+                    const date1 = a.createdAt != null ? new Date(a.createdAt).getTime() : 0;
+                    const date2 = b.createdAt != null ? new Date(b.createdAt).getTime() : 0;
                     return date2 - date1;
-                    });
-                } else {
-                    this.showMess = true;
-                }
-            }, error => {
-                console.log(error);
-            });
+                });
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    },
+    methods: {
+        getRelativeTime(tim) {
+            return moment(tim).fromNow();
+        }
     }
 }
 </script>

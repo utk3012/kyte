@@ -3,7 +3,7 @@
     <span v-for="(post, i) in posts" :key="post.p_id">
         <div class="card">
             <div class="card-body">
-                <div class="row">
+                <b-row>
                     <div class="col-3 col-sm-2 col-xl-1">
                         <img :src="post.image" alt="profile-img" class="rounded-circle" width="50px"
                             height="50px" style="cursor: pointer">
@@ -20,19 +20,20 @@
                             &emsp;
                         </div>
                     </div>
-                </div>
+                </b-row>
                 <b-row style="margin-top: 5px; margin-bottom: 9px;">
                     <p class="card-text col-12">
-                        {{ post.post }}
+                        {{ post.post.length > 500 ? post.post.substring(0, 500) + '...' : post.post }}
+                        <span v-if="post.post.length > 500"> <b-link :to="`post/${post.p_id}`">View full post</b-link></span>
                     </p>
                 </b-row>
-                <b-row>
+                <b-row style="font-size: 15px;">
                     <div class="col-10">
                         <span style="cursor: pointer;" @click="onLike(post.p_id, i)">
                             <i class="fas fa-thumbs-up" :class="{liked: liked(i)}"></i></span>
                             <span> {{ post.likes.length }}</span>
                         &emsp;
-                        <b-link href="#">Comments</b-link>
+                        <b-link :to="`post/${post.p_id}`">{{ posts[i].noOfComments }} {{ +posts[i].noOfComments === 1 ? 'Comment' : 'Comments' }}</b-link>
                     </div>
                     <div class="col-2">
                         <b-link :to="`post/${post.p_id}`">View post</b-link>
@@ -58,9 +59,19 @@ export default {
                     const index = this.posts[ind].likes.indexOf(this.user.id);
                     if (index === -1) {
                         this.posts[ind].likes.push(this.user.id);
+                        this.$toasted.show('Post liked', { 
+                            theme: "primary", 
+                            position: "top-right", 
+                            duration : 2000
+                        });
                     }
                     else {
                         this.posts[ind].likes.splice(index, 1);
+                        this.$toasted.show('Post unliked', { 
+                            theme: "primary", 
+                            position: "top-right", 
+                            duration : 2000
+                        });
                     }
                 }
             }
@@ -73,6 +84,11 @@ export default {
                 const res = await this.$http.post('post/delete', { postId: postId });
                 if (res.status === 200) {
                     this.posts.splice(ind, 1);
+                    this.$toasted.show('Post deleted', { 
+                        theme: "primary", 
+                        position: "top-right", 
+                        duration : 2000
+                    });
                 }
             }
             catch (error) {

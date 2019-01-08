@@ -48,7 +48,7 @@ export default {
         ...mapActions(['getUser']),
         onLogout() {
             localStorage.removeItem('token');
-            this.$router.push('login');
+            this.$router.push('/login');
         }
     },
     computed: {

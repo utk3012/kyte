@@ -83,6 +83,11 @@ export default {
                 const res = await this.$http.post('post/getposts', { username: this.username });
                 if (res.status === 200) {
                     this.posts = [...res.body.posts];
+                    this.posts.sort(function compare(a, b) {
+                        const date1 = a.updatedAt != null ? new Date(a.updatedAt).getTime() : 0;
+                        const date2 = b.updatedAt != null ? new Date(b.updatedAt).getTime() : 0;
+                        return date2 - date1;
+                    });
                     this.relation = res.body.relation;
                     this.loadedUserId = res.body.u_id;
                     this.actionUser = res.body.actionUser;

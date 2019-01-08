@@ -65,6 +65,15 @@ export default {
             if (this.post.post.length === 0) {
                 return;
             }
+            if (this.post.post.length > 10000) {
+                this.$toasted.show('Post too long', { 
+                        theme: "primary",
+                        type: "error",
+                        position: "top-right", 
+                        duration : 2000
+                    });
+                return;
+            }
             try {
                 const res = await this.$http.post('post/save', {post: this.post.post, public: this.post.public});
                 if (res.status === 200) {
@@ -87,6 +96,11 @@ export default {
             const res = await this.$http.post('post/getfriendposts');
             if (res.status === 200) {
                 this.posts = [...res.body.posts];
+                this.posts.sort(function compare(a, b) {
+                    const date1 = a.updatedAt != null ? new Date(a.updatedAt).getTime() : 0;
+                    const date2 = b.updatedAt != null ? new Date(b.updatedAt).getTime() : 0;
+                    return date2 - date1;
+                });
             }
         }
         catch (error) {

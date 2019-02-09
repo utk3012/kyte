@@ -9,7 +9,7 @@
                             height="50px" style="cursor: pointer">
                     </div>
                     <div class="col-6 col-sm-7 col-xl-8">
-                        <h5 class="card-title">&nbsp; <router-link :to="post.username" class="user__route">{{ post.name }}</router-link></h5>
+                        <h5 class="card-title">&nbsp; <router-link :to="`/${post.username}`" class="user__route">{{ post.name }}</router-link></h5>
                         <h6 class="card-subtitle mb-2 text-muted">&nbsp; {{ post.time }}</h6>
                     </div>
                     <div class="col-3 col-sm-3 col-xl-3">

@@ -1,5 +1,6 @@
 <template>
-    <b-navbar toggleable="md" type="dark" variant="dark">
+<div>
+    <b-navbar toggleable="md" type="dark" variant="dark" fixed="top">
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
@@ -38,6 +39,8 @@
 
   </b-collapse>
 </b-navbar>
+<div style="margin-bottom: 60px;"></div>
+</div>
 </template>
 <script>
 import { mapActions } from 'vuex';
@@ -66,5 +69,3 @@ export default {
     font-size: 1.5rem;
 }
 </style>
-
-

@@ -14,7 +14,7 @@
                                             height="50px" style="cursor: pointer">
                                     </div>
                                     <div class="col-6 col-sm-7 col-xl-8">
-                                        <h5 class="card-title">&nbsp; <router-link :to="post.username" class="user__route">{{ post.name }}</router-link></h5>
+                                        <h5 class="card-title">&nbsp; <router-link :to="`/${post.username}`" class="user__route">{{ post.name }}</router-link></h5>
                                         <h6 class="card-subtitle mb-2 text-muted">&nbsp; {{ post.time }}</h6>
                                     </div>
                                     <div class="col-3 col-sm-3 col-xl-3">
@@ -48,25 +48,25 @@
                                 <hr>
                                 <b-row>
                                     <div class="col-12">
-                                        <div class="row" v-for="(comm) in comments" :key="comm.id" style="margin-top: 10px;">
-                                            <div class="col-1">
+                                        <div class="row comment__grid" v-for="(comm) in comments" :key="comm.id" style="margin-top: 10px;">
+                                            <div class="comment__image">
                                                 <img :src="comm.image" alt="profile-img" class="rounded-circle" width="32px"
                                                     height="32px" style="cursor: pointer; margin-right: 17px;">
                                             </div>
-                                            <div class="col-11">
+                                            <div class="comment__text">
                                                 <div class="comment__">
-                                                    <span><b-link>{{ comm.name }}&nbsp; </b-link></span>
+                                                    <span><b-link :to="`/${comm.username}`">{{ comm.name }}</b-link>&nbsp;</span>
                                                     <span>
                                                         {{ comm.comment }}
                                                     </span>
-                                                    <br>
+                                                    <!-- <br> -->
                                                 </div>
                                                 <span class="comment__meta row">
                                                     <b-link>Like</b-link>
                                                     &emsp;
-                                                    <span class="text-muted">{{ comm.time }}</span>
-                                                    &emsp;
                                                     <b-link style="color: red" class="justify-content-end">Delete</b-link>
+                                                    &emsp;
+                                                    <span class="text-muted">{{ comm.time }}</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -99,7 +99,8 @@
                     </div>
                 </div>
             </div>
-        </b-container> 
+        </b-container>
+        <br>
     </div>
 </template>
 <script>
@@ -256,9 +257,16 @@ export default {
     .liked {
         color: blue;
     }
+    .comment__grid {
+        margin-left: 1px;
+    }
+    .comment__image {
+        margin-right: 7px;
+    }
     .comment__ {
         background-color: #e4e5e7;
         border-radius: 25px;
+        max-width: 48vw;
         padding: 5px 14px;
         font-size: 15px;
     }

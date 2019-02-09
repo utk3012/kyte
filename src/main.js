@@ -32,6 +32,31 @@ const router = new VueRouter({
   mode: 'history'
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path === '/register' || to.path === '/reset') {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      next();
+    }
+    else {
+      next('/home');
+    }
+  }
+  if (to.path !== '/login' && to.path !== '/register' && !to.path.startsWith('/reset')) {
+    Vue.http.post('login/verify')
+    .then(resp => {
+      if (resp.status === 200 && resp.body.msg === "success") {
+        next();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      next('/login');
+    });
+  }
+  next();
+});
+
 new Vue({
   router: router,
   store: store,

@@ -1,206 +1,205 @@
 <template>
     <div>
         <app-navbar></app-navbar>
-        <div class="container" v-if="myId">
-        <div class="w3-col m4 listBox">
-        <h3 v-if="users.length === 0" class="w3-center">No friends</h3>
-        <div class="friend-item w3-row" v-for="user in users" :key="user.id"
-            @click="selectFriend(user.id)"
-            :style="{'background-color': selectedFriend === user.id ? 'lightblue' : 'white'}">
-            <div class="w3-col m3">
-            <img :src="user.image" alt="user-img" width="50" height="50">
-            </div>
-            <!-------------------------------------------------------------------------------->
-            <div class="w3-col m12" v-if="lastMessages[user.id]">
-            <div class="w3-row">
-                <div class="w3-col m10">
-            <strong>{{ user.name }}</strong>
+        
+        <b-container fluid class="main-body">
+        <div class="row">
+        <div class="listBox">
+        <div class="row friend-item" v-for="u in users" :key="u.id" @click="selectFriend(u.id)"
+          :style="{'background-color': (selectedFriend === u.id) ? '#bcbcbc' : 'white'}">
+                <div class="col-3">
+                  <img :src="u.image" alt="u-img" width="50" height="50">
                 </div>
-            <div class="w3-col m2 w3-right" style="padding-right: 1vw">{{ lastMessages[user.id].dts }}</div>
-            </div>
-            <div class="w3-row">
-            <div class="w3-col m10">
-                {{ lastMessages[user.id].msg }}
-            </div>
-            <div class="w3-col m2 w3-right" style="padding-right: 1vw">
-                <!--<span style="color: blue">{{ lastMessages[user.id].seen === 't' ? 'Seen' : '' }}</span>-->
-            </div>
-            </div>
-            </div>
-            <!-------------------------------------------------------------------------------->
-            <div class="w3-col m12" v-if="!lastMessages[user.id]">
-            <div class="w3-row">
-                <div class="w3-col m10">
-                <strong>{{ user.name }}</strong>
-                </div>
-                <div class="w3-col m2 w3-right" style="padding-right: 1vw">&nbsp;</div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-col m10">
-                &nbsp;
-                </div>
-                <div class="w3-col m2 w3-right" style="padding-right: 1vw">
-                <span class="">&nbsp;</span>
-                </div>
-            </div>
-            </div>
-            <!------------------------------------------------------------------------------ -->
+    
+    <div class="col-9">
+      <div class="row">
+        <div class="col-8">
+      <strong>{{ u.name }}</strong>
         </div>
+      <div class="col-4 text-muted">10:19</div>
+      </div>
+        <div class="row">
+        <div class="col-8">
+          Hello
         </div>
-        <div class="w3-col m8 messageBox" style="overlfow-y: scroll;" ref="scrollMe">
-        <div class="w3-row">
-            <div class="w3-col m12" v-if="selectedFriend !== -1">
-            <div>
-                <div class="messageScroll">
-                <div class="messageCase" v-for="(m, index) in messages" :key="index">
-                    <span class="messageItem"
-                            :class = "{'w3-right': +m.s_id === myId}"
-                            :style = "{'background-color': (+m.s_id !== myId) ? '#ededed' : '#8f959e'}">
-                        {{ m.msg }}
-                    </span>
-                    <br>
-                </div>
-                </div>
-                <div style="height: 50px"></div>
-                <form>
-                    <div class="w3-row formBox">
-                    <div class="w3-col m11">
-                        <input class="w3-input w3-border" type="text" id="mess" name="message" v-model="mes" placeholder="Type your message here!" autocomplete="off" size="45">
-                    </div>
-                    <div class="w3-col m1">
-                        <button type="submit" class="w3-button w3-block w3-green" @click.prevent="onSend">
-                        Send
-                        </button>
-                    </div>
-                    </div>
-                </form>
-            </div>
-            <div v-if="selectedFriend === -1">
-                <div class="w3-center">
-                <h3>Select a chat</h3>
-                </div>
-            </div>
-            </div>
+        <div class="col-4">
+          seen
         </div>
-        </div>
-        </div>
+      </div>
     </div>
+                </div>
+            </div>
+            <div class="messageBox" v-if="selectedFriend !== -1">
+                <div class="messageCase" ref="scrollMe">
+                    <div class="messageWrapper" v-for="m in messages[selectedFriend]" :key="m.id+rerender" :class="{'text-right': (+m.s_id === myId)}">
+                      <span class="messageItem" :style="{'background-color': (+m.s_id !== myId) ? '#0084FF' : '#bbbec4', 'color': (+m.s_id !== myId) ? 'white' : 'black'}">{{ m.msg }}
+                        <!-- <span class="timeStamp text-muted">
+                          {{ m.dts }}
+                        </span> -->
+                        </span>
+                      </div>
+                </div>
+                <div class="formBox row">
+                  <div class="col-11">
+                  <b-form novalidate autocomplete="off" @submit.prevent="onSend">
+                    <b-form-group>
+                        <b-form-input id="message"
+                                    type="text"
+                                    v-model="mes"
+                                    placeholder="Type your message">
+                        </b-form-input>
+                    </b-form-group>
+                  </b-form>
+                  </div>
+                  <div class="col-1">
+                  <b-button type="button" variant="success" :disabled="mes === ''">
+                    Send
+                  </b-button>
+                  </div>
+                </div>
+            </div>
+            <div v-else style="margin: 20px auto;">
+              <h3>Select a chat!</h3>
+          </div>
+        </div>
+        </b-container>
+    </div>
+    
 </template>
 <script>
+import io from 'socket.io-client';
+
 export default {
     data: () => {
         return {
             selectedFriend: -1,
-            username: '',
             users: [],
             showMess: false,
             myId: 0,
-            messages: [],
+            rerender: 0,
+            messages: {},
             lastMessages: [],
-            mes: ''
+            displayMessages: [],
+            mes: '',
+            socket: io('localhost:5000')
         };
     },
     methods: {
-        getLastMessages() {
-            for (let f of this.users) {
-            for (let i = this.messages.length - 1; i>=0; i--) {
-                const m = this.messages[i];
-                if (m.s_id === f.id || m.r_id === f.id) {
-                const tim = (new Date(m.dts).toISOString()).split('T')[1].substring(0, 5);
-                this.lastMessages[f.id] = {msg: m.msg, dts: tim, seen: m.seen};
-                break;
-                }
-            }
-            }
-        },
-        selectFriend(userId) {
+      async selectFriend(userId) {
+          const res  = await this.$http.post('message/get', { 'r_id': userId, 'pag_no': 0});
+          if (res.status === 200) {
+            this.messages[userId] = [];
+            this.messages[userId].push(...res.body.messages);
+            this.messages[userId].sort(function compare(a, b) {
+              const date1 = a.dts != null ? new Date(a.dts).getTime() : 0;
+              const date2 = b.dts != null ? new Date(b.dts).getTime() : 0;
+              return date1 - date2;
+            });
             this.selectedFriend = userId;
-            setTimeout(() => {
-                this.$refs.scrollMe.scrollTop = this.$refs.scrollMe.scrollHeight;
-            }, 2);
+          }
+          setTimeout(() => {
+              this.$refs.scrollMe.scrollTop = this.$refs.scrollMe.scrollHeight;
+          }, 2);
+      },
+      async onSend() {
+        if (this.mes === '') {
+          return;
+        }
+        try {
+          const res = await this.$http.post('message/send', {msg: this.mes, 'r_id': this.selectedFriend});
+          if (res.status === 200) {
+            this.messages[this.selectedFriend].push({'id': res.body.id, 'msg': this.mes, 's_id': this.myId, 'r_id': this.selectedFriend, 'dts': res.body.dts, 'seen': 1});
+          }
+        }
+        catch (error) {
+          console.log(error);
+        }
+        this.$refs.scrollMe.scrollTop = this.$refs.scrollMe.scrollHeight;
+        this.mes = '';
+      }
+    },
+    async created() {
+        const token = localStorage.getItem('token');
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
+        this.myId = JSON.parse(atob(base64)).userId;
+        this.socket.emit('join_chat', this.myId);
+        this.socket.on('message', (msg) => {
+          this.messages[msg.s_id].push(msg);
+          this.rerender += 1;
+        });
+        try {
+            const res = await this.$http.post('user/getfriends');
+            if (res.status === 200) {
+              this.users = [...res.body.friends];
+              for (let u of this.users) {
+                this.messages[u.id] = [];
+              }
+            }
+        }
+        catch (error) {
+            console.log(error);
         }
     },
-    created() {
-        const accessToken = localStorage.getItem('accessToken');
-        this.username = localStorage.getItem('username');
-        const header = {
-            Authorization: `Bearer ${accessToken}`
-        };
-        this.$http.post('friends', {username: this.username}, {headers: header})
-            .then(response => {
-                if (response.body.success === 1) {
-                    this.users = [...response.body.data];
-                    this.$http.post('get_messages', {username: this.username, dts: '2018-09-23T10:01:00'}, {headers: header})
-                        .then(resp => {
-                            this.messages = [...resp.body.data];
-                            this.getLastMessages();
-                            this.myId = response.body.myid;
-                        }, error => {
-                            console.log(error);
-                        });
-                }
-                else {
-                    this.users = [];
-                }
-                this.showMess = true;
-            }, error => {
-                console.log(error);
-            });
+    beforeDestroy() {
+      this.socket.emit('leave_chat', this.myId);
     }
 }
 </script>
 
 <style scoped>
-.container {
-  overflow-y: hidden;
-}
+@import url('https://fonts.googleapis.com/css?family=Lato');
 .listBox {
   background-color: #f7f7f7;
-  height: 93vh;
-  margin-top: 7vh;
+  width: 28%;
   border-right: 1px solid #bcbcbc;
-  overflow-y: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0px;
+  height: calc(100vh - 62px);
 }
 .messageBox {
-  height: 93vh;
-  margin-top: 7vh;
-  overflow-y: auto;
+  height: calc(100vh - 62px);
+  width: 72%;
+  overflow-y: hidden;
 }
 .friend-item {
   height: 12vh;
-  display: flex;
   align-items: center;
   border-bottom: 1px solid #d7dde5;
   cursor: pointer;
 }
+.friend-item:hover {
+  background-color: #e4e2e2 !important;
+  transition: cubic-bezier(0.175, 0.885, 0.32, 1.275)
+}
 .friend-item img {
-  margin: 0 2vw;
+  margin: 0 1vw;
   border-radius: 50%;
 }
-.messages {
-  height: 80vh;
+.messageCase {
+  height: calc(100vh - 62px - 58px);
+  padding: 10px 20px;
+  overflow-y: scroll;
 }
 .messageItem {
   padding: 4px 14px;
-  margin-bottom: 4px;
   border-radius: 21px;
 }
-.messageCase {
-  margin: 15px;
+.messageWrapper {
+  margin-bottom: 7px;
+  font-family: 'Lato', 'sans serif'
+}
+.timeStamp {
+  font-size: 10px;
 }
 .formBox {
-  width: 63vw;
+  width: 72%;
   position: absolute;
   bottom: 0;
 }
 input[type=text] {
-  margin: 10px;
-  border-radius: 4px;
-}
-.formBox button {
-  border-radius: 4px;
-  padding-left: 10px;
-  margin-left: 20px;
-  margin-top: 10px;
+  margin-left: 14px;
+  border-radius: 25px;
 }
 </style>

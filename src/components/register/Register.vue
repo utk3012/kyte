@@ -129,6 +129,7 @@ export default {
             if (!this.re.test(this.user.email)) {
                 return 'Invalid email';
             }
+            return '';
         },
         statePassword () {
             if (this.user.password === '') {
@@ -154,6 +155,7 @@ export default {
             else if (this.user.username.length < 5) {
                 return 'Should be atleast 5 characters'
             }
+            return '';
         },
         stateBirthday() {
             let ye = Number(this.user.birthday.substring(0, 4));
@@ -167,6 +169,7 @@ export default {
             if (ye >= (new Date().getFullYear()-10) || ye < 1900) {
                 return 'Invalid';
             }
+            return '';
         }
     },
 }

@@ -67,7 +67,7 @@ export default {
             }
             if (this.post.post.length > 10000) {
                 this.$toasted.show('Post too long', { 
-                        theme: "primary",
+                        theme: "toasted-primary",
                         type: "error",
                         position: "top-right", 
                         duration : 2000
@@ -80,7 +80,7 @@ export default {
                     this.post.post = '';
                     this.post.public = false;
                     this.$toasted.show('Posted', { 
-                        theme: "primary", 
+                        theme: "toasted-primary", 
                         position: "top-right", 
                         duration : 2000
                     });

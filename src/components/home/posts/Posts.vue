@@ -60,7 +60,7 @@ export default {
                     if (index === -1) {
                         this.posts[ind].likes.push(this.user.id);
                         this.$toasted.show('Post liked', { 
-                            theme: "primary", 
+                            theme: "toasted-primary", 
                             position: "top-right", 
                             duration : 2000
                         });
@@ -68,7 +68,7 @@ export default {
                     else {
                         this.posts[ind].likes.splice(index, 1);
                         this.$toasted.show('Post unliked', { 
-                            theme: "primary", 
+                            theme: "toasted-primary", 
                             position: "top-right", 
                             duration : 2000
                         });
@@ -85,7 +85,7 @@ export default {
                 if (res.status === 200) {
                     this.posts.splice(ind, 1);
                     this.$toasted.show('Post deleted', { 
-                        theme: "primary", 
+                        theme: "toasted-primary", 
                         position: "top-right", 
                         duration : 2000
                     });

@@ -163,7 +163,7 @@ export default {
                     if (index === -1) {
                         this.post.likes.push(this.user.id);
                         this.$toasted.show('Post liked', { 
-                            theme: "primary", 
+                            theme: "toasted-primary", 
                             position: "top-right", 
                             duration : 2000
                         });
@@ -171,7 +171,7 @@ export default {
                     else {
                         this.post.likes.splice(index, 1);
                         this.$toasted.show('Post unliked', { 
-                            theme: "primary", 
+                            theme: "toasted-primary", 
                             position: "top-right", 
                             duration : 2000
                         });
@@ -208,7 +208,7 @@ export default {
             }
             if (this.comment.length > 5000) {
                 this.$toasted.show('Comment too long', { 
-                    theme: "primary", 
+                    theme: "toasted-primary", 
                     type: "error",
                     position: "top-right", 
                     duration : 2000
@@ -229,7 +229,7 @@ export default {
                         image: this.user.image
                     });
                     this.$toasted.show('Comment saved', { 
-                        theme: "primary", 
+                        theme: "toasted-primary", 
                         position: "top-right", 
                         duration : 2000
                     });

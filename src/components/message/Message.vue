@@ -40,7 +40,7 @@
                       </div>
                 </div>
                 <div class="formBox row">
-                  <div class="col-11">
+                  <div class="col-8">
                   <b-form novalidate autocomplete="off" @submit.prevent="onSend">
                     <b-form-group>
                         <b-form-input id="message"
@@ -51,10 +51,10 @@
                     </b-form-group>
                   </b-form>
                   </div>
-                  <div class="col-1">
-                  <b-button type="button" variant="success" :disabled="mes === ''">
-                    Send
-                  </b-button>
+                  <div class="col-4">
+                    <b-button type="button" variant="success" @click="onSend" :disabled="mes === ''">
+                      Send
+                    </b-button>
                   </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ export default {
             lastMessages: [],
             displayMessages: [],
             mes: '',
-            socket: io('localhost:5000')
+            socket: io('http://localhost:5000')
         };
     },
     methods: {
@@ -106,6 +106,7 @@ export default {
           return;
         }
         try {
+          
           const res = await this.$http.post('message/send', {msg: this.mes, 'r_id': this.selectedFriend});
           if (res.status === 200) {
             this.messages[this.selectedFriend].push({'id': res.body.id, 'msg': this.mes, 's_id': this.myId, 'r_id': this.selectedFriend, 'dts': res.body.dts, 'seen': 1});
